@@ -44,7 +44,7 @@ export const Login = () => {
                 setPasswordErrorMsg(res.msg)
             } else if (!res.check && res.userExist && !res.pw) {
                 setUserNameError(true)
-                setUserNameErrorMsg(re.msg)
+                setUserNameErrorMsg(res.msg)
             }
         })
     }
