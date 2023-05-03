@@ -12,7 +12,7 @@ export const BlogNavigation = () => {
                             <Link to='/login' className="text-decoration-none color-white">Login</Link>
                         </li>
                         <li className="list-style-none mar-l-16">
-                            <Link to='/login' className="text-decoration-none color-white">Register</Link>
+                            <Link to='/register' className="text-decoration-none color-white">Register</Link>
                         </li>
                     </ul>
                 </div>

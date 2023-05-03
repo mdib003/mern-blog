@@ -11,8 +11,8 @@ function App() {
      <BlogNavigation></BlogNavigation>
      <Routes>
       <Route path='/' element={<Post/>}/>
-      <Route path='/login' element={<Login></Login>}/>
-      <Route path='/register' element={<Register></Register>}/>
+      <Route path='/login' element={<Login />}/>
+      <Route path='/register' element={<Register />}/>
      </Routes>
     </div>
   );
