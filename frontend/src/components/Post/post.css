@@ -1,0 +1,36 @@
+.post-page {
+    padding-top: 32px;
+}
+
+.post-container {
+    margin-bottom: 32px;
+}
+
+.img-post {
+    width: 80px;
+    height: 100%;
+    margin-right: 16px;
+    padding-top: 4px;
+}
+
+.img-post img {
+    width: 100%;
+    height: 100%;
+}
+
+.read-more-btn {
+    color: #fff;
+    background-color: #e8c887;
+    outline: none;
+    border: 1px solid #e8c887;
+    padding: 8px;
+    border-radius: 6px;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.read-more-btn:hover {
+    color: #e8c887;
+    background-color: #fff;  
+}

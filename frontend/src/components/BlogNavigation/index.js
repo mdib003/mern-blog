@@ -1,5 +1,5 @@
 import {Link } from "react-router-dom";
-
+import "./blog-navigation.css"
 
 export const BlogNavigation = () => {
     return (
