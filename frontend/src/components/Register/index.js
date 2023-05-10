@@ -20,6 +20,7 @@ export const Register = () => {
 
     const changeBlog = (e) => {
         setPasswordError(false)
+        setRegistrationFailedState(false)
         const {name, value} = e.target
         if (name === 'fullName') {
             fullNameRef.current.classList.remove('input-error')
@@ -70,6 +71,7 @@ export const Register = () => {
             if (res.check) {
                 setNavigate(true)
             } else if (!res.check) {
+                console.log(res.message)
                 setRegistrationFailedState(true)
             }
         })
