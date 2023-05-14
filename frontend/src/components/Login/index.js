@@ -28,21 +28,21 @@ export const Login = () => {
                 setPasswordErrorMsg('Password is required')
             }
             return
-        }
+        }       
 
-        fetch('/vi/api/login', {
+        fetch('/v1/api/login', {
             method:'POST',
             body:  JSON.stringify(loginData), 
             headers: {
                 "Content-type": "application/json"
             }
-        }).then(d =>  d.json()).then(res => {
-            if (res.check && res.userExist && res.pw) {
+        }).then(d =>  d.json()).then(res => {          
+            if (res.check && res.userExist && res.pw) {                
                 setNavigate(true)
             } else if (!res.check && res.userExist && !res.pw) {
                 setPasswordError(true)
                 setPasswordErrorMsg(res.msg)
-            } else if (!res.check && res.userExist && !res.pw) {
+            } else if (!res.check && !res.userExist && !res.pw) {
                 setUserNameError(true)
                 setUserNameErrorMsg(res.msg)
             }
@@ -67,7 +67,7 @@ export const Login = () => {
                         </div>
                         <div className="form-input-box">
                         <label>Password</label>
-                            <input placeholder="Password" type="text" value={loginData.password} onChange={(e) => {setPasswordError(false); setPasswordErrorMsg(''); setLoginData({...loginData, password: e.target.value})}}/>
+                            <input placeholder="Password" type="password" value={loginData.password} onChange={(e) => {setPasswordError(false); setPasswordErrorMsg(''); setLoginData({...loginData, password: e.target.value})}}/>
                             {passwordError && <p className="unmatch-pw">{passwordErrorMsg}</p>}
                         </div>
                         <button type="submit">Login</button>

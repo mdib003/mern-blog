@@ -68,17 +68,16 @@ export const Register = () => {
                 "Content-type": "application/json"
             }
         }).then(d => d.json()).then(res => {
-            if (res.check) {
+            if (res.check) {               
                 setNavigate(true)
-            } else if (!res.check) {
-                console.log(res.message)
+            } else if (!res.check) {               
                 setRegistrationFailedState(true)
             }
         })
     }
 
-    if (navigate) {
-        <Navigate to="/"/>
+    if (navigate) {        
+      return <Navigate to="/login"/>
     }
 
     return (
