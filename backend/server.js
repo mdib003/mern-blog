@@ -2,10 +2,13 @@ const User = require('./Schema/userSchema')
 const express = require('express')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
+const cookieParser = require('cookie-parser')
+const jwt = require('jsonwebtoken')
 
 const app = express()
 const mongodbUrl = "mongodb+srv://blogadmin:cG70ygiuDBa4BApc@blogcluster.xl9tzqz.mongodb.net/?retryWrites=true&w=majority"
-const salt = 10
+const salt = 10;
+const privateKey = 'fjsklewisdjfsdjfskd'
 
 
 app.use(function (req, res, next) {
@@ -49,9 +52,17 @@ app.post('/v1/api/register', async (req, res) => {
     const { fullName, userName, password } = req.body
     try {
         await User.create({ userName, password: bcrypt.hashSync(password, salt), fullName })
-        res.status(201).json({ check: true, msg: 'User created successfully' })
+       
+        jwt.sign({ userName, fullName }, privateKey, {}, (err, token) => {
+            if (err) {
+                console.error('', err)
+                res.status(400).json({ check: false })
+                return
+            }
+            res.status(201).cookie('token', token).json({ check: true, msg: 'User created successfully'})
+        })
     } catch (err) {
-        console.log(err)
+        console.error(err)
         res.status(400).json({ check: false, msg: 'User already exists' })
     }
 })
@@ -61,7 +72,7 @@ app.post('/v1/api/login', async (req, res) => {
     const checkUser = await User.findOne({ userName })
     if (checkUser) {
         const checkPassword = bcrypt.compareSync(password, checkUser.password)
-        console.log(checkPassword)
+
         if (checkPassword) {
             res.status(200).json({ check: true, msg: 'User logged in successfully', pw: true, userExist: true })
         } else {
@@ -70,7 +81,6 @@ app.post('/v1/api/login', async (req, res) => {
     } else {
         res.status(400).json({ check: false, msg: 'User not found', pw: false, userExist: false })
     }
-
 })
 
 
