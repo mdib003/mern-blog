@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 
 const app = express()
 const mongodbUrl = "mongodb+srv://blogadmin:cG70ygiuDBa4BApc@blogcluster.xl9tzqz.mongodb.net/?retryWrites=true&w=majority"
-const saltRounds = 2;
+const salt = 10
 
 
 app.use(function (req, res, next) {
@@ -47,12 +47,11 @@ app.delete('/users/:id', async (req, res) => {
 
 app.post('/v1/api/register', async (req, res) => {
     const { fullName, userName, password } = req.body
-    const hash = bcrypt.hashSync(password, saltRounds).toString()  
-    console.log(hash, typeof hash)
     try {
-        await User.create({ userName, hash, fullName })
+        await User.create({ userName, password: bcrypt.hashSync(password, salt), fullName })
         res.status(201).json({ check: true, msg: 'User created successfully' })
     } catch (err) {
+        console.log(err)
         res.status(400).json({ check: false, msg: 'User already exists' })
     }
 })
@@ -61,7 +60,9 @@ app.post('/v1/api/login', async (req, res) => {
     const { userName, password } = req.body
     const checkUser = await User.findOne({ userName })
     if (checkUser) {
-        if (checkUser.password === password) {
+        const checkPassword = bcrypt.compareSync(password, checkUser.password)
+        console.log(checkPassword)
+        if (checkPassword) {
             res.status(200).json({ check: true, msg: 'User logged in successfully', pw: true, userExist: true })
         } else {
             res.status(400).json({ check: false, msg: 'Wrong password', pw: false, userExist: true })
