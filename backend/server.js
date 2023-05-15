@@ -20,6 +20,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(express.json())
+app.use(cookieParser())
 /* app.use(express.urlencoded({ extended:true })) */
 
 
@@ -52,17 +53,8 @@ app.post('/v1/api/register', async (req, res) => {
     const { fullName, userName, password } = req.body
     try {
         await User.create({ userName, password: bcrypt.hashSync(password, salt), fullName })
-       
-        jwt.sign({ userName, fullName }, privateKey, {}, (err, token) => {
-            if (err) {
-                console.error('', err)
-                res.status(400).json({ check: false })
-                return
-            }
-            res.status(201).cookie('token', token).json({ check: true, msg: 'User created successfully'})
-        })
+        res.status(201).json({ check: true, msg: 'User created successfully' })
     } catch (err) {
-        console.error(err)
         res.status(400).json({ check: false, msg: 'User already exists' })
     }
 })
@@ -72,14 +64,44 @@ app.post('/v1/api/login', async (req, res) => {
     const checkUser = await User.findOne({ userName })
     if (checkUser) {
         const checkPassword = bcrypt.compareSync(password, checkUser.password)
-
         if (checkPassword) {
-            res.status(200).json({ check: true, msg: 'User logged in successfully', pw: true, userExist: true })
+            jwt.sign({ userName: checkUser.userName, fullName: checkUser.fullName, id: checkUser._id }, privateKey, {}, (err, token) => {
+                if (err) {
+                    res.status(400).json({ check: false })
+                    return
+                }
+                res.status(200).cookie('token', token).json({ check: true, msg: 'User logged in successfully', pw: true, userExist: true })
+            })
         } else {
             res.status(400).json({ check: false, msg: 'Wrong password', pw: false, userExist: true })
         }
     } else {
         res.status(400).json({ check: false, msg: 'User not found', pw: false, userExist: false })
+    }
+})
+
+app.post('/v1/api/profile', (req, res) => {
+    const { token } = req.cookies
+    if (token) {
+        {
+            jwt.verify(token, privateKey, (err, decoded) => {
+                if (err) {
+                    res.status(400).json({ check: false, msg: 'Invalid token' })
+                } else {
+                    res.status(200).json({ check: true, msg: 'User logged in successfully', userName: decoded.userName, fullName: decoded.fullName, id: decoded.id })
+                }
+            })
+        }
+    } else {
+        res.status(400).json({ check: true, msg: '' })
+    }
+})
+
+app.post('/v1/api/blog/logout', (req, res) => {
+    try {
+        res.status(200).cookie('token', '').json({ check: true, msg: 'User logged out successfully' })
+    } catch (err) {
+        console.log(err)
     }
 })
 
