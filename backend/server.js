@@ -81,10 +81,9 @@ app.post('/v1/api/login', async (req, res) => {
 })
 
 app.post('/v1/api/profile', (req, res) => {
-    const { token } = req.cookies
-    if (token) {
+    if (req?.cookies?.token) {
         {
-            jwt.verify(token, privateKey, (err, decoded) => {
+            jwt.verify(req?.cookies?.token, privateKey, (err, decoded) => {
                 if (err) {
                     res.status(400).json({ check: false, msg: 'Invalid token' })
                 } else {

@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
 import "./login.css";
+import { BlogContext } from "../../App";
 
 export const Login = () => {
     const [userNameError, setUserNameError] = useState(false)
@@ -14,7 +15,9 @@ export const Login = () => {
         password: ""
     })
 
-    const loginBlog = (e) => {
+    const { profileHandler } = useContext(BlogContext)
+
+    const loginBlog = async (e) => {
         e.preventDefault()
         const { userName, password } = loginData
 
@@ -30,7 +33,7 @@ export const Login = () => {
             return
         }       
 
-        fetch('/v1/api/login', {
+        await fetch('/v1/api/login', {
             method:'POST',
             body:  JSON.stringify(loginData), 
             headers: {
@@ -46,7 +49,9 @@ export const Login = () => {
                 setUserNameError(true)
                 setUserNameErrorMsg(res.msg)
             }
-        })
+        }) 
+
+        await profileHandler()
     }
 
     if (navigate) {

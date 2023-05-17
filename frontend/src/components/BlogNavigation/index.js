@@ -5,17 +5,17 @@ import { BlogContext } from "../../App";
 
 export const BlogNavigation = () => {
 
-    const { appValues, setAppValues } = useContext(BlogContext)
+    const { appValues, profileHandler } = useContext(BlogContext)
 
     const logoutHandler = async () => {
         await fetch('/v1/api/blog/logout', {
             method: 'POST',
             credentials: 'include'
-        }).then(response => response.json()).then(res => {
-            setAppValues((prevState) => ({ ...prevState, loggedIn: false }))
-        }
-        )
+        }).then(response => response.json()).then(res => {})
+        await profileHandler()
     }
+
+    console.log('appValues', appValues)
 
     return (
         <div className="nav-container">

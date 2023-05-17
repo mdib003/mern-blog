@@ -3,7 +3,7 @@ import { BlogNavigation } from "./components/BlogNavigation";
 import { Post } from "./components/Post";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 
 export const BlogContext = createContext()
@@ -17,35 +17,38 @@ function App() {
     loading: true
   })
 
+  const navigate = useNavigate()
+
   useEffect(() => {
-    fetch('/v1/api/profile', {
+    profileHandler()
+  }, [])
+
+  const profileHandler = async () => {
+    await fetch('/v1/api/profile', {
       method: 'POST',
       credentials: 'include',
-    }).then((d) => d.json()).then((d) => {  
-      console.log('d', d)
+    }).then((d) => d.json()).then((d) => {
       if (d.userName && d.fullName) {
         setAppValues((prevState) => (
-          { ...prevState, userName: d?.userName, fullName: d?.fullName, loading: false, loggedIn: true}
+          { ...prevState, userName: d?.userName, fullName: d?.fullName, loading: false }
         ))
       } else {
         setAppValues((prevState) => (
-          { ...prevState, loggedIn: false, loading: false }
+          { ...prevState, loading: false, userName: '', fullName: ''}
         ))
+        navigate('/login')
       }
     }).catch((err) => {
-      console.log('profile', err)
-      setAppValues((prevState) => (
-        { ...prevState, loggedIn: false, loading: false }
-      ))
+       setAppValues((prevState) => (
+         { ...prevState, loading: false}
+       ))
+       navigate('/login')        
     });
-  }, [appValues.loggedIn])
-
-  if (appValues.loggedIn = false) {
-    return <Navigate to='/login' />
   }
 
+
   return (
-    <BlogContext.Provider value={{appValues, setAppValues}}>
+    <BlogContext.Provider value={{ appValues, profileHandler }}>
       {!appValues.loading ? <div>
         <BlogNavigation></BlogNavigation>
         <Routes>
