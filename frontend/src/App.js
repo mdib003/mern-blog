@@ -33,6 +33,9 @@ function App() {
         setAppValues((prevState) => (
           { ...prevState, userName: d.userName, fullName: d.fullName, loading: false }
         ))
+        if (location.pathname === '/register' || location.pathname === '/login') {
+          navigate('/')
+        }
       } else {
         setAppValues((prevState) => (
           { ...prevState, loading: false, userName: '', fullName: '' }

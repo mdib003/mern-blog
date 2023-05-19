@@ -20,7 +20,7 @@ export const BlogNavigation = () => {
             <div className="nav-container">
                 <div className="container">
                     <div className="flex justify-between align-center pad-t-16 pad-b-16">
-                        <Link to='/' className="text-decoration-none color-white">MyBlog</Link>
+                        <Link to={(!appValues?.userName || !appValues?.fullName) ? '/login' : '/'} className="text-decoration-none color-white">MyBlog</Link>
                         <ul className="flex">
                             {(!appValues?.userName || !appValues?.fullName) &&
                                 <>
@@ -36,7 +36,7 @@ export const BlogNavigation = () => {
                                 (appValues?.userName && appValues?.fullName) &&
                                 <>
                                     <li className="list-style-none mar-l-16 flex align-center">
-                                        <Link to='/creat-post' className="text-decoration-none create-post">Create Post</Link>
+                                        <Link to='/create-post' className="text-decoration-none create-post">Create Post</Link>
                                     </li>
                                     <li className="list-style-none mar-l-16">
                                         <button className="logout-btn" onClick={logoutHandler}>Logout</button>
