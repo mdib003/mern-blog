@@ -1,9 +1,10 @@
 import { createContext, useEffect, useState } from "react";
 import { BlogNavigation } from "./components/BlogNavigation";
+import { CreatePost } from "./components/CreatePost";
 import { Post } from "./components/Post";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
 
 export const BlogContext = createContext()
@@ -13,11 +14,11 @@ function App() {
   const [appValues, setAppValues] = useState({
     userName: '',
     fullName: '',
-    loggedIn: null,
     loading: true
   })
 
   const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
     profileHandler()
@@ -30,22 +31,29 @@ function App() {
     }).then((d) => d.json()).then((d) => {
       if (d.userName && d.fullName) {
         setAppValues((prevState) => (
-          { ...prevState, userName: d?.userName, fullName: d?.fullName, loading: false }
+          { ...prevState, userName: d.userName, fullName: d.fullName, loading: false }
         ))
       } else {
         setAppValues((prevState) => (
-          { ...prevState, loading: false, userName: '', fullName: ''}
+          { ...prevState, loading: false, userName: '', fullName: '' }
         ))
-        navigate('/login')
+        if (location.pathname === '/register') {
+          navigate('/register')
+        } else {
+          navigate('/login')
+        }
       }
     }).catch((err) => {
-       setAppValues((prevState) => (
-         { ...prevState, loading: false}
-       ))
-       navigate('/login')        
+      setAppValues((prevState) => (
+        { ...prevState, loading: false }
+      ))
+      if (location.pathname === '/register') {
+        navigate('/register')
+      } else {
+        navigate('/login')
+      }
     });
   }
-
 
   return (
     <BlogContext.Provider value={{ appValues, profileHandler }}>
@@ -55,6 +63,7 @@ function App() {
           <Route path='/' element={<Post />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
+          <Route path='/create-post' element={<CreatePost />} />
         </Routes>
       </div> : <div className="text-center">
         Loading
