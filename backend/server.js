@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken')
-const multer = require('multer')
+const Post = require('./Schema/postSchema')
 
 const app = express()
 const mongodbUrl = "mongodb+srv://blogadmin:cG70ygiuDBa4BApc@blogcluster.xl9tzqz.mongodb.net/?retryWrites=true&w=majority"
@@ -105,9 +105,21 @@ app.post('/v1/api/blog/logout', (req, res) => {
     }
 })
 
-app.use('/v1/api/create-post', (req, res) => {
+app.post('/v1/api/create-post', async (req, res) => {
     console.log(req.body)
-    res.status(200).json({ msg: 'Post created successfully' })
+    const {title, summary, content} = req.body
+    try {
+        await Post.create({title, summary, content})
+        res.status(200).json({ msg: 'Post created successfully', check: true })
+    }
+    catch (err) {      
+        res.status(400).json({ check: false, msg: 'Post is not created. Please try again' })
+    }
+})
+
+app.get('/v1/api/posts', async (req, res) => {
+    const postsList = await Post.find()   
+    res.status(200).json({postsList})
 })
 
 
