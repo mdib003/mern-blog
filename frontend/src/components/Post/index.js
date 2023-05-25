@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./post.css";
+import { Loading } from "../Loading"
 
 export const Post = () => {
 
@@ -20,7 +21,7 @@ export const Post = () => {
 
     return (
         <div className="container post-page">
-            {loading ? <div>Loading</div> :
+            {loading ? <Loading />  :
                 <>
                     {
                         postsList?.length > 0 && postsList.map((post, i) => {

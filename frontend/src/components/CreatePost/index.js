@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom"
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import "./create-post.css"
+import "./create-post.css";
+import { Loading } from "../Loading"
 
 export const CreatePost = () => {
     const [title, setTitle] = useState('')
@@ -48,7 +49,7 @@ export const CreatePost = () => {
 
     return (
         <div className='container create-post-page'>
-            {loading ? <div>Loading</div> :
+            {loading ? <Loading /> :
                 <>
                     {empty && <p className="err">All fields are required</p>}
                     <form onSubmit={submitForm}>

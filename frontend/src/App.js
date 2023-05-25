@@ -6,6 +6,7 @@ import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
+import { Loading } from "./components/Loading";
 
 export const BlogContext = createContext()
 
@@ -68,9 +69,9 @@ function App() {
           <Route path='/register' element={<Register />} />
           <Route path='/create-post' element={<CreatePost />} />
         </Routes>
-      </div> : <div className="text-center">
-        Loading
-      </div>}
+      </div> : 
+      <Loading/>
+      }
     </BlogContext.Provider>
   );
 }

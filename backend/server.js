@@ -118,7 +118,7 @@ app.post('/v1/api/create-post', async (req, res) => {
 })
 
 app.get('/v1/api/posts', async (req, res) => {
-    const postsList = await Post.find()   
+    const postsList = await Post.find().sort({createdAt: -1})
     res.status(200).json({postsList})
 })
 
