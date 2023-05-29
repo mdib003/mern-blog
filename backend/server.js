@@ -127,6 +127,11 @@ app.get('/v1/api/posts', async (req, res) => {
     res.status(200).json({ postsList })
 })
 
+app.get('/posts/:id', async (req, res) => {
+    const {id} = req.params
+    const postDoc = await Post.findById(id)
+    res.status(200).json({ postDoc })
+})
 
 const connectionParams = {
     useNewUrlParser: true,
