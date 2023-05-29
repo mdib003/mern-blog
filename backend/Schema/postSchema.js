@@ -14,6 +14,10 @@ const postSchema = new Schema({
     summary: {
         type: String,
         required: true
+    },
+    author: {
+        type: String,
+        required: true
     }
 }, { timestamps: true })
 

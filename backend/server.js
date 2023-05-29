@@ -106,20 +106,25 @@ app.post('/v1/api/blog/logout', (req, res) => {
 })
 
 app.post('/v1/api/create-post', async (req, res) => {
-    console.log(req.body)
-    const {title, summary, content} = req.body
+    const { title, summary, content } = req.body
     try {
-        await Post.create({title, summary, content})
-        res.status(200).json({ msg: 'Post created successfully', check: true })
+       await jwt.verify(req?.cookies?.token, privateKey, {}, async (err, decoded) => {
+            if (err) {
+                res.status(400).json({ check: false, msg: 'Post is not created. Please try again' })
+            }            
+            await Post.create({ title, summary, content, author: decoded.userName})
+            res.status(200).json({ msg: 'Post created successfully', check: true })
+        })
+
     }
-    catch (err) {      
+    catch (err) {
         res.status(400).json({ check: false, msg: 'Post is not created. Please try again' })
     }
 })
 
 app.get('/v1/api/posts', async (req, res) => {
-    const postsList = await Post.find().sort({createdAt: -1})
-    res.status(200).json({postsList})
+    const postsList = await Post.find().sort({ createdAt: -1 })
+    res.status(200).json({ postsList })
 })
 
 
